@@ -2,14 +2,13 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '@quikk-money/quikk-api';
 import { RouterModule } from '@angular/router';
-
 @Component({
-  selector: 'quikk-money-signin',
+  selector: 'quikk-money-verify-email',
   standalone: true,
   imports: [CommonModule, RouterModule],
-  templateUrl: './signin.component.html',
-  styleUrls: ['./signin.component.css'],
+  templateUrl: './verify-email.component.html',
+  styleUrls: ['./verify-email.component.css'],
 })
-export class SigninComponent {
+export class VerifyEmailComponent {
   public authService = inject(AuthService);
 }
