@@ -14,7 +14,14 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@quikk-money/models": ["libs/shared/data-access/models/src/index.ts"],
+      "@quikk-money/quikk-api": [
+        "libs/shared/data-access/quikk-api/src/index.ts"
+      ],
+      "@quikk-money/signin": ["libs/auth/feature/signin/src/index.ts"],
+      "@quikk-money/signup": ["libs/auth/feature/signup/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
