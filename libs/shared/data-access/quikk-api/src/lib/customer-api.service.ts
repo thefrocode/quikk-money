@@ -2,10 +2,9 @@ import { inject, Injectable } from '@angular/core';
 import {
   AngularFirestore,
   AngularFirestoreCollection,
-  AngularFirestoreDocument,
 } from '@angular/fire/compat/firestore';
 import { Customer } from '@quikk-money/models';
-import { first, firstValueFrom } from 'rxjs';
+
 import { WalletApiService } from './wallet-api.service';
 
 @Injectable({
@@ -20,26 +19,40 @@ export class CustomerApiService {
   getAll(): AngularFirestoreCollection<Customer> {
     return this.customersRef;
   }
-  async getOneByUid(uid: string) {
-    const snapshot = this.db
+  getOneByUid(uid?: string) {
+    return this.db
       .collection<Customer>('customers', (ref) =>
         ref.where('uid', '==', uid).limit(1)
       )
       .valueChanges();
-    return await firstValueFrom(snapshot);
   }
+  getOneByPhone(phoneNumber: string) {
+    return this.db
+      .collection<Customer>('customers', (ref) =>
+        ref.where('phoneNumber', '==', phoneNumber).limit(1)
+      )
+      .valueChanges();
+  }
+
   create(customer: Customer): any {
-    const customerRef: AngularFirestoreDocument<Customer> = this.db.doc(
-      `customers/${customer.uid}`
-    );
-    return customerRef.set(customer, {
-      merge: true,
+    return this.customersRef.add(customer).then((docRef) => {
+      const customerId = docRef.id;
+
+      // Add the document ID to the customer data
+      const customerWithId = { ...customer, id: customerId };
+
+      // Update the customer document with the added ID
+      docRef.update({ id: customerId });
+
+      // Create the wallet using the customer ID
+      this.walletApi.create({
+        customer_id: customerId,
+        balance: 0,
+      });
     });
   }
 
   update(id: string, data: any): Promise<void> {
-    console.log('Customer', data);
-    console.log('ID', id);
     return this.customersRef.doc(id).update(data);
   }
 

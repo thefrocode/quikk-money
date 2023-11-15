@@ -5,20 +5,21 @@ import {
   Router,
   UrlTree,
 } from '@angular/router';
+import { AuthStore } from '@quikk-money/auth-store';
 import { AuthService } from '@quikk-money/quikk-api';
 import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
 export class AuthGuard {
-  public authService: AuthService = inject(AuthService);
+  public authStore: AuthStore = inject(AuthStore);
   public router: Router = inject(Router);
 
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | UrlTree | boolean {
-    if (this.authService.isLoggedIn !== true) {
+    if (this.authStore.user().isLogged !== true) {
       this.router.navigate(['sign-in']);
     }
     return true;

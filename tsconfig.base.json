@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@quikk-money/auth-store": ["libs/auth/store/auth/src/index.ts"],
       "@quikk-money/home": ["libs/home/feature/home/src/index.ts"],
       "@quikk-money/models": ["libs/shared/data-access/models/src/index.ts"],
       "@quikk-money/quikk-api": [

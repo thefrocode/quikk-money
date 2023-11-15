@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '@quikk-money/quikk-api';
 import { RouterModule } from '@angular/router';
+import { AuthStore } from '@quikk-money/auth-store';
 
 @Component({
   selector: 'quikk-money-signin',
@@ -12,4 +13,8 @@ import { RouterModule } from '@angular/router';
 })
 export class SigninComponent {
   public authService = inject(AuthService);
+
+  //public authStore = inject(AuthStore);
+
+  //public user = this.authStore.user;
 }

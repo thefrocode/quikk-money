@@ -16,15 +16,24 @@ export class WalletApiService {
   getAll(): AngularFirestoreCollection<Wallet> {
     return this.walletsRef;
   }
-  create(wallet: Wallet): any {
-    console.log(wallet);
-    return this.walletsRef.add({ ...wallet }).then((res) => {
-      console.log(res);
-    });
+  getWalletByCustomerId(customerId?: string) {
+    return this.db
+      .collection<Wallet>('wallets', (ref) =>
+        ref.where('customer_id', '==', customerId).limit(1)
+      )
+      .valueChanges();
   }
 
-  update(id: string, data: any): Promise<void> {
-    return this.walletsRef.doc(id).update(data);
+  create(wallet: Wallet): any {
+    return this.walletsRef.doc(wallet.customer_id).set(wallet);
+  }
+
+  update(id?: string, data?: any): Promise<void> {
+    console.log('wallet-api.service.ts: update()', id, data);
+    if (id) {
+      return this.walletsRef.doc(id).update(data);
+    }
+    return Promise.resolve();
   }
 
   delete(id: string): Promise<void> {

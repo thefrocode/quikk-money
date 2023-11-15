@@ -21,7 +21,7 @@
           </li>
           <!-- Calling SignOut() Api from AuthService -->
           <li class="nav-item">
-            <a class="nav-link" (click)="authService.SignOut()">
+            <a class="nav-link" (click)="authService.signOut()">
               <i class="fas fa-sign-out-alt"></i>Log out
             </a>
           </li>
@@ -34,8 +34,36 @@
         <div class="pt-3 pb-2 mb-3 border-bottom">
           <h1 class="h2">User Profile</h1>
         </div>
+        <div>
+          @if (!user().value.emailVerified) {
+          <p>Kindly verify your email to be able to send money</p>
+          }
+        </div>
+        <div>
+          @if (customer().status === 'success') {
+          <p>Customer: {{ customer().value.firstName }}</p>
+          }
+        </div>
+        <div>
+          @if (wallet().status === 'success') {
+          <p>Balance: {{ wallet().value.balance }}</p>
+          }
+        </div>
+        <button (click)="topUp()">Top Up</button>
+
+        <input type="text" #recipientPhone class="border-2" />
+        <button (click)="searchCustomer(recipientPhone.value)">Search</button>
+        <div>
+          @if(recipient()){
+          <p>recipient : {{ recipient().firstName }}</p>
+          }
+        </div>
+
+        <input #amount class="border-2" />
+        <button (click)="sendMoney(amount.value)">Send</button>
+
         <!-- Show user data when logged in -->
-        <div class="row" *ngIf="authService.userData as user">
+        <!-- <div class="row" *ngIf="authService.userData as user">
           <div class="col-md-12">
             <div class="media">
               <img
@@ -64,7 +92,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </main>
   </div>

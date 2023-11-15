@@ -1,72 +1,71 @@
-import { Injectable, NgZone } from '@angular/core';
-import { Customer, User } from '@quikk-money/models';
+import { effect, Injectable, NgZone, signal } from '@angular/core';
+import { Customer, CustomerState, UserState } from '@quikk-money/models';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
 import { CustomerApiService } from './customer-api.service';
+import { Subject, takeUntil } from 'rxjs';
+import { OnDestroy } from '@angular/core';
+import { AuthStore } from '@quikk-money/auth-store';
 @Injectable({
   providedIn: 'root',
 })
-export class AuthService {
-  userData: any; // Save logged in user data
+export class AuthService implements OnDestroy {
+  private unsubscribe$ = new Subject<void>();
   constructor(
     public afs: AngularFirestore,
     public afAuth: AngularFireAuth,
     public router: Router,
-    public customerApi: CustomerApiService
+    public customerApi: CustomerApiService,
+    public authStore: AuthStore
   ) {
-    this.afAuth.authState.subscribe((user) => {
-      if (user) {
-        this.userData = user;
-        localStorage.setItem('user', JSON.stringify(this.userData));
-        JSON.parse(localStorage.getItem('user')!);
-      } else {
-        localStorage.setItem('user', 'null');
-        JSON.parse(localStorage.getItem('user')!);
-      }
+    this.afAuth.authState.pipe(takeUntil(this.unsubscribe$)).subscribe({
+      next: (value) => {
+        console.log('Subscription ', value);
+        if (value) {
+          this.authStore.setUser({
+            value: {
+              email: value?.email,
+              emailVerified: value?.emailVerified,
+              uid: value?.uid,
+            },
+            status: 'success',
+            isLogged: true,
+          });
+          this.router.navigate(['home']);
+        } else {
+          this.authStore.setUser({
+            value: {},
+            status: 'success',
+            isLogged: false,
+          });
+          this.authStore.setCustomer({
+            value: {},
+            status: 'success',
+          });
+          return;
+        }
+      },
+      error: (error) => this.authStore.updateUser(error, 'error'),
     });
   }
   // Sign in with email/password
   signIn(email: string, password: string) {
     return this.afAuth
       .signInWithEmailAndPassword(email, password)
-      .then(async (result: { user: Customer }) => {
-        console.log(result.user as Customer);
-
-        if (!result.user.emailVerified) {
-          window.alert('Please verify your email address. Check your inbox.');
-          return;
-        }
-        if (result.user.uid) {
-          this.customerApi.update(result.user.uid, {
-            emailVerified: result.user.emailVerified,
-            photoURL: result.user.photoURL,
-          });
-        }
-
-        this.afAuth.authState.subscribe((user) => {
-          if (user) {
-            this.router.navigate(['home']);
-          }
-        });
-      })
       .catch((error: { message: string }) => {
         window.alert(error.message);
       });
   }
 
-  signUp(customer: Customer, password: string) {
+  signUp(customer: Customer, email: string, password: string) {
     return this.afAuth
-      .createUserWithEmailAndPassword(customer.email, password)
+      .createUserWithEmailAndPassword(email, password)
       .then((result: { user: Customer }) => {
         this.sendVerificationMail();
-
         this.customerApi.create({
           ...customer,
-          displayName: customer.firstName + ' ' + customer.lastName,
           uid: result.user.uid,
-          photoURL: result.user.photoURL,
-          emailVerified: result.user.emailVerified,
         });
       })
       .catch((error: { message: string }) => {
@@ -75,11 +74,7 @@ export class AuthService {
   }
 
   sendVerificationMail() {
-    return this.afAuth.currentUser
-      .then((u: any) => u.sendEmailVerification())
-      .then(() => {
-        this.router.navigate(['verify-email']);
-      });
+    return this.afAuth.currentUser.then((u: any) => u.sendEmailVerification());
   }
 
   // Returns true when user is looged in and email is verified
@@ -88,10 +83,13 @@ export class AuthService {
     return user !== null && user.emailVerified !== false ? true : false;
   }
 
-  SignOut() {
+  signOut() {
     return this.afAuth.signOut().then(() => {
-      localStorage.removeItem('user');
       this.router.navigate(['sign-in']);
     });
+  }
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }
