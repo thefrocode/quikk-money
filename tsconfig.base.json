@@ -10,24 +10,45 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": ["es2020", "dom"],
+    "lib": [
+      "es2020",
+      "dom"
+    ],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@quikk-money/auth-store": ["libs/auth/store/auth/src/index.ts"],
-      "@quikk-money/home": ["libs/home/feature/home/src/index.ts"],
-      "@quikk-money/models": ["libs/shared/data-access/models/src/index.ts"],
+      "@quikk-money/auth-store": [
+        "libs/auth/store/auth/src/index.ts"
+      ],
+      "@quikk-money/home": [
+        "libs/home/feature/home/src/index.ts"
+      ],
+      "@quikk-money/models": [
+        "libs/shared/data-access/models/src/index.ts"
+      ],
       "@quikk-money/quikk-api": [
         "libs/shared/data-access/quikk-api/src/index.ts"
       ],
-      "@quikk-money/signin": ["libs/auth/feature/signin/src/index.ts"],
-      "@quikk-money/signup": ["libs/auth/feature/signup/src/index.ts"],
-      "@quikk-money/utils": ["libs/shared/utils/src/index.ts"],
+      "@quikk-money/signin": [
+        "libs/auth/feature/signin/src/index.ts"
+      ],
+      "@quikk-money/signup": [
+        "libs/auth/feature/signup/src/index.ts"
+      ],
+      "@quikk-money/utils": [
+        "libs/shared/utils/src/index.ts"
+      ],
       "@quikk-money/verify-email": [
         "libs/auth/feature/verify-email/src/index.ts"
+      ],
+      "@spartan-ng/ui-input-helm": [
+        "libs/shared/ui/ui-input-helm/src/index.ts"
       ]
     }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
 }

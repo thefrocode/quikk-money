@@ -18,12 +18,8 @@ export class TransactionApiService {
     return from(
       this.db.firestore.runTransaction(async (transaction: any) => {
         // Get sender and recipient wallet documents
-        const senderDocRef: DocumentReference = this.db.doc(
-          `wallets/${senderId}`
-        ).ref;
-        const recipientDocRef: DocumentReference = this.db.doc(
-          `wallets/${recipientId}`
-        ).ref;
+        const senderDocRef = this.db.doc(`wallets/${senderId}`).ref;
+        const recipientDocRef = this.db.doc(`wallets/${recipientId}`).ref;
 
         // Retrieve wallet data in the transaction
         const [senderSnapshot, recipientSnapshot] = await Promise.all([

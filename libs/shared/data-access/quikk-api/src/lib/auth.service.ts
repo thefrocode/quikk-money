@@ -1,5 +1,5 @@
 import { effect, Injectable, NgZone, signal } from '@angular/core';
-import { Customer, CustomerState, UserState } from '@quikk-money/models';
+import { Customer, CustomerState, User, UserState } from '@quikk-money/models';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
@@ -22,7 +22,7 @@ export class AuthService implements OnDestroy {
     this.afAuth.authState.pipe(takeUntil(this.unsubscribe$)).subscribe({
       next: (value) => {
         console.log('Subscription ', value);
-        if (value) {
+        if (value && value.email) {
           this.authStore.setUser({
             value: {
               email: value?.email,
@@ -61,7 +61,7 @@ export class AuthService implements OnDestroy {
   signUp(customer: Customer, email: string, password: string) {
     return this.afAuth
       .createUserWithEmailAndPassword(email, password)
-      .then((result: { user: Customer }) => {
+      .then((result: any) => {
         this.sendVerificationMail();
         this.customerApi.create({
           ...customer,
