@@ -1,4 +1,4 @@
-<div class="displayTable">
+<!-- <div class="displayTable">
   <div class="displayTableCell">
     <div class="authBlock">
       <h3>Sign Up</h3>
@@ -65,15 +65,151 @@
           "
         />
       </div>
-      <div class="formGroup">
-        <span class="or"><span class="orInner">Or</span></span>
-      </div>
-      <div class="redirectToLogin">
-        <span
-          >Already have an account?
-          <span class="redirect" routerLink="/sign-in">Log In</span></span
-        >
-      </div>
+      
     </div>
+  </div>
+</div> -->
+
+<div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+  <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+    <img class="mx-auto h-10 w-auto" src="assets/logo.png" alt="Your Company" />
+    <h2
+      class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900"
+    >
+      Welcome to Quikk Money!!
+    </h2>
+    <h3 class="text-[#9095A0FF] text-center">Create your account</h3>
+  </div>
+
+  <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="space-y-2">
+      <div>
+        <label
+          for="firstName"
+          class="block text-sm font-medium leading-6 text-gray-900"
+          >First Name</label
+        >
+        <div class="mt-2">
+          <input
+            formControlName="firstName"
+            type="text"
+            class="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          />
+          @if(f['firstName'].invalid && (f['firstName'].touched ||
+          submittedForm)){
+          <p class="text-red-500 text-sm italic m-2">First Name is required</p>
+          }
+        </div>
+      </div>
+      <div>
+        <label
+          for="lastName"
+          class="block text-sm font-medium leading-6 text-gray-900"
+          >Last Name</label
+        >
+        <div class="mt-2">
+          <input
+            formControlName="lastName"
+            type="text"
+            class="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          />
+          @if(f['lastName'].invalid && (f['lastName'].touched ||
+          submittedForm)){
+          <p class="text-red-500 text-sm italic m-2">Last Name is required</p>
+          }
+        </div>
+      </div>
+      <div>
+        <label
+          for="email"
+          class="block text-sm font-medium leading-6 text-gray-900"
+          >Email address</label
+        >
+        <div class="mt-2">
+          <input
+            formControlName="email"
+            type="email"
+            autocomplete="email"
+            class="block w-full rounded-md border-0 py-1.5 px-2 stext-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          />
+          @if(f['email'].invalid && (f['email'].touched || submittedForm)){
+          @if(f['email'].errors?.['required']){
+          <p class="text-red-500 text-sm italic m-2">Email is required</p>
+          } @if(f['email'].errors?.['email']){
+          <p class="text-red-500 text-sm italic m-2">
+            Address must be a valid email address
+          </p>
+          } }
+        </div>
+      </div>
+      <div>
+        <label
+          for="phoneNumber"
+          class="block text-sm font-medium leading-6 text-gray-900"
+          >Phone Number</label
+        >
+        <div class="mt-2">
+          <input
+            formControlName="phoneNumber"
+            type="number"
+            class="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          />
+          @if(f['phoneNumber'].invalid && (f['phoneNumber'].touched ||
+          submittedForm)){ @if(f['phoneNumber'].errors?.['required']){
+          <p class="text-red-500 text-sm italic m-2">
+            Phone Number is required
+          </p>
+          } @if(f['phoneNumber'].errors?.['min']){
+          <p class="text-red-500 text-sm italic m-2">
+            Phone Number must have at least 10 digits
+          </p>
+          } }
+        </div>
+      </div>
+
+      <div>
+        <div class="flex items-center justify-between">
+          <label
+            for="password"
+            class="block text-sm font-medium leading-6 text-gray-900"
+            >Password</label
+          >
+        </div>
+        <div class="mt-1">
+          <input
+            formControlName="password"
+            type="password"
+            autocomplete="current-password"
+            class="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          />
+          @if(f['password'].invalid && (f['password'].touched ||
+          submittedForm)){ @if(f['password'].errors?.['required']){
+          <p class="text-red-500 text-sm italic m-2">Password is required</p>
+          } @if(f['password'].errors?.['minlength']){
+          <p class="text-red-500 text-sm italic m-2">
+            Password must be at least 6 characters
+          </p>
+          } }
+        </div>
+      </div>
+
+      <div>
+        <button
+          type="submit"
+          class="flex w-full justify-center rounded-md bg-primary px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-primary-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+        >
+          Sign up
+        </button>
+      </div>
+    </form>
+
+    <p class="mt-10 text-center text-sm text-gray-500">
+      Already Registered?
+      <a
+        routerLink="/sign-in"
+        class="font-semibold leading-6 text-primary hover:text-primary-hover"
+        >Login</a
+      >
+    </p>
   </div>
 </div>
