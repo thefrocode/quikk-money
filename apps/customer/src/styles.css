@@ -12,7 +12,7 @@
 }
 
 :root {
---background: 0 0% 100%;
+--background: 240, 11%, 98%;
 --foreground: 20 14.3% 4.1%;
 --card: 0 0% 100%;
 --card-foreground: 20 14.3% 4.1%;
@@ -21,11 +21,12 @@
 --primary: 1 90% 70%;
 --primary-foreground: 60 9.1% 97.8%;
 --primary-hover: 1 30% 80%;
+--primary-text: 218, 15%, 11%;
 --secondary: 60 4.8% 95.9%;
 --secondary-foreground: 24 9.8% 10%;
 --muted: 60 4.8% 95.9%;
 --muted-foreground: 25 5.3% 44.7%;
---accent: 60 4.8% 95.9%;
+--accent: 4, 88%, 97%;
 --accent-foreground: 24 9.8% 10%;
 --destructive: 0 84.2% 60.2%;
 --destructive-foreground: 60 9.1% 97.8%;

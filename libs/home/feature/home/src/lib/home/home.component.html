@@ -1,4 +1,4 @@
-<!-- Top navigation -->
+<!-- 
 <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
   <a class="navbar-brand col-sm-3 col-md-2 mr-0">
     <img
@@ -8,7 +8,7 @@
     />
   </a>
 </nav>
-<!-- Sidebar navigation -->
+
 <div class="container-fluid">
   <div class="row">
     <nav class="col-md-2 d-md-block bg-light sidebar">
@@ -19,7 +19,7 @@
               <i class="fas fa-user"></i>User Profile
             </a>
           </li>
-          <!-- Calling SignOut() Api from AuthService -->
+          
           <li class="nav-item">
             <a class="nav-link" (click)="authService.signOut()">
               <i class="fas fa-sign-out-alt"></i>Log out
@@ -28,7 +28,7 @@
         </ul>
       </div>
     </nav>
-    <!-- Main content -->
+    
     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
       <div class="inner-adjust">
         <div class="pt-3 pb-2 mb-3 border-bottom">
@@ -61,39 +61,87 @@
 
         <input #amount class="border-2" />
         <button (click)="sendMoney(amount.value)">Send</button>
-
-        <!-- Show user data when logged in -->
-        <!-- <div class="row" *ngIf="authService.userData as user">
-          <div class="col-md-12">
-            <div class="media">
-              <img
-                class="align-self-start mr-5 img-thumbnail rounded-circle"
-                src="{{
-                  user.photoURL ? user.photoURL : '/assets/dummy-user.png'
-                }}"
-                alt="{{ user.displayName }}"
-              />
-              <div class="media-body">
-                <h1>
-                  Hello:
-                  <strong>{{
-                    user.displayName ? user.displayName : 'User'
-                  }}</strong>
-                </h1>
-                <p>
-                  User ID: <strong>{{ user.uid }}</strong>
-                </p>
-                <p>
-                  Email: <strong>{{ user.email }}</strong>
-                </p>
-                <p>
-                  Email Verified: <strong>{{ user.emailVerified }}</strong>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div> -->
       </div>
     </main>
+  </div>
+</div> -->
+<div class="sticky top-0 p-2 bg-primary">
+  <div class="flex flex-row gap-4 justify-between mx-4">
+    <p class="mr-auto"></p>
+    <button
+      class="w-8 h-8 border-2 rounded-full flex justify-center items-center"
+    >
+      <hlm-icon size="18px" name="radixPerson" color="white" />
+    </button>
+  </div>
+</div>
+<div class="flex min-h-full flex-col justify-center">
+  <div class="bg-background px-6 py-6 lg:px-8">
+    <div class="mt-4 sm:mx-auto sm:w-full sm:max-w-sm">
+      @if (customer().status === 'success') {
+      <p class="text-primary-text text-sm">Welcome Back</p>
+      <p class="text-primary-text text-lg font-bold">
+        {{ customer().value.firstName }} {{ customer().value.lastName }}
+      </p>
+      }
+    </div>
+    <div class="sm:mx-auto sm:w-full sm:max-w-sm mt-5">
+      <div class="shadow-primary shadow-sm rounded-md flex justify-between">
+        <div class="p-4">
+          <p class="text-primary-text text-sm">Balance</p>
+          @if (wallet().status === 'success') {
+          <p class="text-primary-text text-lg font-bold">
+            Ksh: {{ wallet().value.balance }}
+          </p>
+          }
+        </div>
+
+        <img src="assets/logo.png" class="rounded-tr-md rounded br-md" />
+      </div>
+    </div>
+  </div>
+  <div class="sm:mx-auto sm:w-full sm:max-w-sm mt-5 flex gap-12 justify-center">
+    <div class="flex flex-col">
+      <button
+        class="w-14 h-14 rounded-full bg-primary flex items-center justify-center"
+      >
+        <hlm-icon size="30px" name="radixPaperPlane" color="white" />
+      </button>
+      <p class="text-center mt-2">Send</p>
+    </div>
+    <div class="flex flex-col">
+      <button
+        class="w-14 h-14 rounded-full bg-primary flex items-center justify-center"
+      >
+        <hlm-icon size="30px" name="radixIdCard" color="white" />
+      </button>
+      <p class="text-center mt-2">Top-up</p>
+    </div>
+  </div>
+  @if(!user().value.emailVerified){
+  <div
+    class="sm:mx-auto sm:w-full sm:max-w-sm mt-5 flex gap-12 justify-center mx-6"
+  >
+    <div class="bg-accent rounded-md p-4">
+      <hlm-icon size="30px" name="radixInfoCircled" color="white" />
+      <p class="text-primary-text">
+        Kindly verify your email to be able to send money
+      </p>
+    </div>
+  </div>
+  }
+  <div
+    class="sm:mx-auto sm:w-full sm:max-w-sm mt-5 flex flex-col gap-4 mx-6 mb-5"
+  >
+    <p class="text-primary-text font-bold text-lg">Transactions</p>
+    <div
+      class="border rounded-md flex flex-row justify-between px-2 py-4 items-center"
+    >
+      <div class="flex flex-col">
+        <p class="font-bold text-md">Christine Mukiri</p>
+        <p>Date</p>
+      </div>
+      <p class="text-sm font-bold">800.00</p>
+    </div>
   </div>
 </div>

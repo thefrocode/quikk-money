@@ -13,10 +13,28 @@ import {
 } from '@quikk-money/quikk-api';
 import { AuthStore } from '@quikk-money/auth-store';
 import { Customer } from '@quikk-money/models';
+import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
+import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
+import { provideIcons } from '@ng-icons/core';
+import {
+  radixIdCard,
+  radixPaperPlane,
+  radixPerson,
+  radixInfoCircled,
+} from '@ng-icons/radix-icons';
+
 @Component({
   selector: 'quikk-money-home',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, HlmButtonDirective, HlmIconComponent],
+  providers: [
+    provideIcons({
+      radixIdCard,
+      radixPaperPlane,
+      radixPerson,
+      radixInfoCircled,
+    }),
+  ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
