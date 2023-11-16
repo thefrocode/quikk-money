@@ -9,6 +9,7 @@ import {
   Validators,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'quikk-money-signup',
@@ -20,16 +21,23 @@ import {
 export class SignupComponent {
   public authService = inject(AuthService);
   formBuilder = inject(FormBuilder);
+  toastr = inject(ToastrService);
   submittedForm = false;
   signupForm!: FormGroup;
 
   ngOnInit(): void {
     this.signupForm = this.formBuilder.group({
-      firstName: ['', [Validators.required]],
-      lastName: ['', [Validators.required]],
-      phoneNumber: ['', [Validators.required, Validators.min(1000000000)]],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      firstName: ['aa', [Validators.required]],
+      lastName: ['aa', [Validators.required]],
+      phoneNumber: [
+        '1111111111',
+        [Validators.required, Validators.min(1000000000)],
+      ],
+      email: [
+        'krystinmukiri@gmail.com',
+        [Validators.required, Validators.email],
+      ],
+      password: ['123456', [Validators.required, Validators.minLength(6)]],
     });
   }
   onSubmit() {

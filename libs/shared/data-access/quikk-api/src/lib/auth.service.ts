@@ -7,6 +7,7 @@ import { CustomerApiService } from './customer-api.service';
 import { Subject, takeUntil } from 'rxjs';
 import { OnDestroy } from '@angular/core';
 import { AuthStore } from '@quikk-money/auth-store';
+import { ToastrService } from 'ngx-toastr';
 @Injectable({
   providedIn: 'root',
 })
@@ -17,7 +18,8 @@ export class AuthService implements OnDestroy {
     public afAuth: AngularFireAuth,
     public router: Router,
     public customerApi: CustomerApiService,
-    public authStore: AuthStore
+    public authStore: AuthStore,
+    private toastr: ToastrService
   ) {
     this.afAuth.authState.pipe(takeUntil(this.unsubscribe$)).subscribe({
       next: (value) => {
@@ -62,6 +64,7 @@ export class AuthService implements OnDestroy {
     return this.afAuth
       .createUserWithEmailAndPassword(email, password)
       .then((result: any) => {
+        this.toastr.success('You have successfully signed up!', 'Success!');
         this.sendVerificationMail();
         this.customerApi.create({
           ...customer,
@@ -69,7 +72,7 @@ export class AuthService implements OnDestroy {
         });
       })
       .catch((error: { message: string }) => {
-        window.alert(error.message);
+        this.toastr.error('Error signing Up!' + error.message, 'Error!');
       });
   }
 
