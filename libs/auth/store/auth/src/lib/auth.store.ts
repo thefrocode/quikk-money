@@ -69,7 +69,6 @@ export class AuthStore {
     this.walletApiService
       .getWalletByCustomerId(customerId)
       .subscribe((res: Wallet[]) => {
-        console.log('wallet', res);
         this.wallet.set({
           value: res[0],
           status: 'success',

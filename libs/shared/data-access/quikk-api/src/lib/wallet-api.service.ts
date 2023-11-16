@@ -4,12 +4,14 @@ import {
   AngularFirestoreCollection,
 } from '@angular/fire/compat/firestore';
 import { Wallet } from '@quikk-money/models';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root',
 })
 export class WalletApiService {
   private db = inject(AngularFirestore);
+  private toastr: ToastrService = inject(ToastrService);
   walletsRef: AngularFirestoreCollection<Wallet> =
     this.db.collection('/wallets');
 
@@ -28,12 +30,35 @@ export class WalletApiService {
     return this.walletsRef.doc(wallet.customer_id).set(wallet);
   }
 
-  update(id?: string, data?: any): Promise<void> {
-    console.log('wallet-api.service.ts: update()', id, data);
-    if (id) {
-      return this.walletsRef.doc(id).update(data);
+  update(id?: string, data?: any) {
+    if (!id || !data || !data.amount) {
+      console.log('wallet-api.service.ts: update() id or data.amount is null');
     }
-    return Promise.resolve();
+    this.walletsRef
+      .doc(id)
+      .get()
+      .subscribe((doc) => {
+        const docData = doc.data();
+        const currentBalance = docData?.balance || 0;
+        const newBalance = currentBalance + data.amount;
+
+        if (newBalance >= 0) {
+          this.walletsRef
+            .doc(id)
+            .update({
+              ...data,
+              balance: newBalance,
+            })
+            .then(() => {
+              this.toastr.success('Account Top Up Successfull!', 'Success!');
+            })
+            .catch((error) => {
+              this.toastr.error('Account Top Up Failed!', 'Error!');
+            });
+        } else {
+          console.log('wallet-api.service.ts: update() insufficient funds');
+        }
+      });
   }
 
   delete(id: string): Promise<void> {

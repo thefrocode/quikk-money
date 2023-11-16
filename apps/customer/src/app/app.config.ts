@@ -7,12 +7,15 @@ import { importProvidersFrom } from '@angular/core';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideToastr } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(appRoutes),
     importProvidersFrom(
       AngularFireModule.initializeApp(environment.firebaseConfig),
-      AngularFireAuthModule
+      AngularFireAuthModule,
+      BrowserAnimationsModule
     ),
     provideToastr({
       timeOut: 5000,
@@ -20,5 +23,6 @@ export const appConfig: ApplicationConfig = {
       preventDuplicates: true,
     }),
     provideAnimations(),
+    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: false } },
   ],
 };
