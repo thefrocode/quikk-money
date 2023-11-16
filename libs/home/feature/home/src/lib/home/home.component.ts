@@ -18,12 +18,14 @@ import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 import { provideIcons } from '@ng-icons/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { TopUpDialogComponent } from '@quikk-money/top-up-dialog';
+import { SendMoneyDialogComponent } from '@quikk-money/send-money-dialog';
 import {
   radixIdCard,
   radixPaperPlane,
   radixPerson,
   radixInfoCircled,
 } from '@ng-icons/radix-icons';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'quikk-money-home',
@@ -56,46 +58,55 @@ export class HomeComponent {
 
   public transactionApiService = inject(TransactionApiService);
 
+  private toastr: ToastrService = inject(ToastrService);
+
   public user = this.authStore.user;
 
   public customer = this.authStore.customer;
 
   public wallet = this.authStore.wallet;
 
-  recipient = signal<Customer>({});
+  transactions = this.authStore.transactions;
+
+  // transactions$ = this.transactionApiService.getAllTransactionsByCustomerId(
+  //   this.customer().value.id
+  // );
 
   constructor(public authStore: AuthStore, private dialog: MatDialog) {}
-  ngOnInit(): void {
-    console.log('user', this.wallet());
-  }
+
   openTopUpDialog() {
     const dialogRef = this.dialog.open(TopUpDialogComponent);
     dialogRef.afterClosed().subscribe((result: { amount: string }) => {
-      console.log('amount', result);
+      if (!result) return;
+
       this.walletApiService.update(this.customer().value.id, {
         amount: result.amount,
       });
       this.authStore.getWalletByCustomerId(this.customer().value.id);
     });
   }
-  topUp() {
-    const balance = this.wallet().value.balance;
-    this.walletApiService.update(this.customer().value.id, {
-      balance: balance ? balance + 100 : 100,
+  openSendMoneyDialog() {
+    const dialogRef = this.dialog.open(SendMoneyDialogComponent);
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (!result) return;
+
+      if (!this.user().value.emailVerified) {
+        this.toastr.error('Verify your account!', 'Error!');
+        return;
+      }
+      const sender = this.customer().value.id;
+      if (sender && result.recipient && result.amount) {
+        this.transactionApiService.sendMoney(
+          sender,
+          result.recipient,
+          parseInt(result.amount)
+        );
+      }
     });
   }
-  searchCustomer(phoneNumber: string) {
-    this.customerApiService
-      .getOneByPhone(phoneNumber)
-      .subscribe((customer: any) => {
-        this.recipient.set(customer[0]);
-      });
-  }
-  sendMoney(amount: string) {
-    const sender = this.customer().value.id;
-    const recipient = this.recipient().id;
-    if (sender && recipient && amount) {
-      this.transactionApiService.sendMoney(sender, recipient, parseInt(amount));
-    }
+  getTransactionsByCustomerId() {
+    this.transactionApiService.getAllTransactionsByCustomerId(
+      this.customer().value.id
+    );
   }
 }

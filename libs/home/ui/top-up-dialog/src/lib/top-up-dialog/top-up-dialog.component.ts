@@ -28,7 +28,6 @@ export class TopUpDialogComponent {
     });
   }
   onSubmit() {
-    console.log(this.topUpForm.value.amount);
     this.dialogRef.close(this.topUpForm.value);
   }
 }

@@ -46,7 +46,6 @@ export class WalletApiService {
           this.walletsRef
             .doc(id)
             .update({
-              ...data,
               balance: newBalance,
             })
             .then(() => {

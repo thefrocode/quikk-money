@@ -5,15 +5,19 @@ import {
   DocumentReference,
 } from '@angular/fire/compat/firestore';
 import { Transaction } from '@quikk-money/models';
-import { from } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
+import { from, combineLatest, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TransactionApiService {
   private db = inject(AngularFirestore);
+
+  private toastr: ToastrService = inject(ToastrService);
   customersRef: AngularFirestoreCollection<Transaction> =
     this.db.collection('/transactions');
+
   sendMoney(senderId: string, recipientId: string, amount: number) {
     return from(
       this.db.firestore.runTransaction(async (transaction: any) => {
@@ -29,6 +33,7 @@ export class TransactionApiService {
 
         // Check if the sender has enough balance
         const senderBalance = senderSnapshot.data()?.balance || 0;
+
         if (senderBalance < amount) {
           throw new Error('Insufficient funds');
         }
@@ -36,13 +41,13 @@ export class TransactionApiService {
         // Update sender's balance
         transaction.update(senderDocRef, { balance: senderBalance - amount });
 
-        // Update recipient's balance
         const recipientBalance = recipientSnapshot.data()?.balance || 0;
+
         transaction.update(recipientDocRef, {
           balance: recipientBalance + amount,
         });
 
-        // Add transaction record
+        //Add transaction record
         const transactionData = {
           sender_id: senderId,
           recipient_id: recipientId,
@@ -51,7 +56,25 @@ export class TransactionApiService {
         };
         const transactionsCollection = this.db.collection('transactions');
         transaction.set(transactionsCollection.ref.doc(), transactionData);
+
+        this.toastr.success('Money Sent Successfully!', 'Success!');
       })
+    );
+  }
+  getAllTransactionsByCustomerId(customerId?: string) {
+    const asSenderTransactions$ = this.db
+      .collection<Transaction>('transactions', (ref) =>
+        ref.where('sender_id', '==', customerId)
+      )
+      .valueChanges();
+    const asRecipientTransactions$ = this.db
+      .collection<Transaction>('transactions', (ref) =>
+        ref.where('recipient_id', '==', customerId)
+      )
+      .valueChanges();
+
+    return combineLatest(asSenderTransactions$, asRecipientTransactions$).pipe(
+      map(([asSender, asRecipient]) => [...asSender, ...asRecipient])
     );
   }
 }

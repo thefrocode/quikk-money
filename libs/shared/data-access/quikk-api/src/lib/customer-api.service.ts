@@ -29,7 +29,7 @@ export class CustomerApiService {
   getOneByPhone(phoneNumber: string) {
     return this.db
       .collection<Customer>('customers', (ref) =>
-        ref.where('phoneNumber', '==', phoneNumber).limit(1)
+        ref.where('phoneNumber', '==', +phoneNumber).limit(1)
       )
       .valueChanges();
   }

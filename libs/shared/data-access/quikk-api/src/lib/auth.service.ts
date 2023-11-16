@@ -23,7 +23,6 @@ export class AuthService implements OnDestroy {
   ) {
     this.afAuth.authState.pipe(takeUntil(this.unsubscribe$)).subscribe({
       next: (value) => {
-        console.log('Subscription ', value);
         if (value && value.email) {
           this.authStore.setUser({
             value: {

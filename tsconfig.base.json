@@ -21,6 +21,9 @@
       "@quikk-money/quikk-api": [
         "libs/shared/data-access/quikk-api/src/index.ts"
       ],
+      "@quikk-money/send-money-dialog": [
+        "libs/home/ui/send-money-dialog/src/index.ts"
+      ],
       "@quikk-money/signin": ["libs/auth/feature/signin/src/index.ts"],
       "@quikk-money/signup": ["libs/auth/feature/signup/src/index.ts"],
       "@quikk-money/top-up-dialog": ["libs/home/ui/top-up-dialog/src/index.ts"],

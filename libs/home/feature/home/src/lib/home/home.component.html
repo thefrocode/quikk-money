@@ -1,74 +1,8 @@
-<!-- 
-<nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-  <a class="navbar-brand col-sm-3 col-md-2 mr-0">
-    <img
-      class="brand-logo"
-      src="assets/logo-positronx-white.svg"
-      alt="positronX.io Logo"
-    />
-  </a>
-</nav>
-
-<div class="container-fluid">
-  <div class="row">
-    <nav class="col-md-2 d-md-block bg-light sidebar">
-      <div class="sidebar-sticky">
-        <ul class="nav flex-column">
-          <li class="nav-item">
-            <a class="nav-link active">
-              <i class="fas fa-user"></i>User Profile
-            </a>
-          </li>
-          
-          <li class="nav-item">
-            <a class="nav-link" (click)="authService.signOut()">
-              <i class="fas fa-sign-out-alt"></i>Log out
-            </a>
-          </li>
-        </ul>
-      </div>
-    </nav>
-    
-    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-      <div class="inner-adjust">
-        <div class="pt-3 pb-2 mb-3 border-bottom">
-          <h1 class="h2">User Profile</h1>
-        </div>
-        <div>
-          @if (!user().value.emailVerified) {
-          <p>Kindly verify your email to be able to send money</p>
-          }
-        </div>
-        <div>
-          @if (customer().status === 'success') {
-          <p>Customer: {{ customer().value.firstName }}</p>
-          }
-        </div>
-        <div>
-          @if (wallet().status === 'success') {
-          <p>Balance: {{ wallet().value.balance }}</p>
-          }
-        </div>
-        <button (click)="topUp()">Top Up</button>
-
-        <input type="text" #recipientPhone class="border-2" />
-        <button (click)="searchCustomer(recipientPhone.value)">Search</button>
-        <div>
-          @if(recipient()){
-          <p>recipient : {{ recipient().firstName }}</p>
-          }
-        </div>
-
-        <input #amount class="border-2" />
-        <button (click)="sendMoney(amount.value)">Send</button>
-      </div>
-    </main>
-  </div>
-</div> -->
 <div class="sticky top-0 p-2 bg-primary">
   <div class="flex flex-row gap-4 justify-between mx-4">
     <p class="mr-auto"></p>
     <button
+      (click)="authService.signOut()"
       class="w-8 h-8 border-2 rounded-full flex justify-center items-center"
     >
       <hlm-icon size="18px" name="radixPerson" color="white" />
@@ -103,6 +37,7 @@
   <div class="sm:mx-auto sm:w-full sm:max-w-sm mt-5 flex gap-12 justify-center">
     <div class="flex flex-col">
       <button
+        (click)="openSendMoneyDialog()"
         class="w-14 h-14 rounded-full bg-primary flex items-center justify-center"
       >
         <hlm-icon size="30px" name="radixPaperPlane" color="white" />
@@ -135,14 +70,17 @@
     class="sm:mx-auto sm:w-full sm:max-w-sm mt-5 flex flex-col gap-4 mx-6 mb-5"
   >
     <p class="text-primary-text font-bold text-lg">Transactions</p>
+    @for(transaction of transactions().value; track transaction.id){
     <div
       class="border rounded-md flex flex-row justify-between px-2 py-4 items-center"
     >
       <div class="flex flex-col">
-        <p class="font-bold text-md">Christine Mukiri</p>
-        <p>Date</p>
+        <p>
+          {{ transaction.timestamp.seconds * 1000 | date : 'MMM d, H:mm:ss a' }}
+        </p>
       </div>
-      <p class="text-sm font-bold">800.00</p>
+      <p class="text-sm font-bold">Ksh {{ transaction.amount }}</p>
     </div>
+    }
   </div>
 </div>

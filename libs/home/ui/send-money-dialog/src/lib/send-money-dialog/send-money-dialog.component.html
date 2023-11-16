@@ -1,0 +1,47 @@
+<div class="p-6">
+  <form [formGroup]="sendMoneyForm" (ngSubmit)="onSubmit()">
+    <div
+      class="flex flex-col w-5/6 justify-center items-center gap-4 mx-6 my-4"
+    >
+      <p class="font-semibold text-primary text-lg">Send Money</p>
+      @if(recipient().id){
+      <p class="font-bold text-lg text-primary-text text-center">
+        {{ recipient().firstName }} {{ recipient().lastName }}
+      </p>
+      }@else{
+      <p class="text-xs text-center">No recipient. Enter phone and search</p>
+      }
+      <div class="flex flex-row gap-2 mt-6">
+        <input
+          type="number"
+          class="border rounded-md h-8 px-4"
+          placeholder="Enter Phone Number"
+          formControlName="phoneNumber"
+          #recipientPhone
+        />
+        <button
+          type="button"
+          class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"
+          (click)="searchCustomer(recipientPhone.value)"
+        >
+          <hlm-icon size="18px" name="radixMagnifyingGlass" color="white" />
+        </button>
+      </div>
+      <div class="flex flex-row gap-2 mt-2 w-full grow-1">
+        <input
+          type="number"
+          class="border rounded-md h-8 px-4 w-full"
+          placeholder="Enter Amount"
+          formControlName="amount"
+        />
+      </div>
+
+      <button
+        [disabled]="sendMoneyForm.invalid"
+        class="bg-primary px-4 py-2 rounded-md text-white font-semibold disabled:opacity-50"
+      >
+        Send Money
+      </button>
+    </div>
+  </form>
+</div>

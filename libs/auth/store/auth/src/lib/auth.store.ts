@@ -3,11 +3,17 @@ import { Injectable, signal, effect } from '@angular/core';
 import {
   Customer,
   CustomerState,
+  Transaction,
+  TransactionsState,
   UserState,
   Wallet,
   WalletState,
 } from '@quikk-money/models';
-import { CustomerApiService, WalletApiService } from '@quikk-money/quikk-api';
+import {
+  CustomerApiService,
+  TransactionApiService,
+  WalletApiService,
+} from '@quikk-money/quikk-api';
 
 @Injectable({
   providedIn: 'root',
@@ -26,9 +32,11 @@ export class AuthStore {
     value: {},
     status: 'pending',
   });
+  transactions = signal<TransactionsState>({ value: [], status: 'pending' });
   constructor(
     private customerApiService: CustomerApiService,
-    private walletApiService: WalletApiService
+    private walletApiService: WalletApiService,
+    private transactionApiService: TransactionApiService
   ) {
     effect(() => {
       if (this.user().isLogged) {
@@ -38,6 +46,7 @@ export class AuthStore {
     effect(() => {
       if (this.customer().status === 'success') {
         this.getWalletByCustomerId(this.customer().value.id);
+        this.getTransactionsByCustomerId(this.customer().value.id);
       }
     });
   }
@@ -71,6 +80,16 @@ export class AuthStore {
       .subscribe((res: Wallet[]) => {
         this.wallet.set({
           value: res[0],
+          status: 'success',
+        });
+      });
+  }
+  getTransactionsByCustomerId(customerId?: string) {
+    this.transactionApiService
+      .getAllTransactionsByCustomerId(customerId)
+      .subscribe((res: Transaction[]) => {
+        this.transactions.set({
+          value: res,
           status: 'success',
         });
       });
