@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '@quikk-money/quikk-api';
 import { RouterModule } from '@angular/router';
 import { HlmInputDirective } from '@spartan-ng/ui-input-helm';
+import { PasswordValidator } from '@quikk-money/utils';
 import {
   FormGroup,
   FormBuilder,
@@ -26,19 +27,28 @@ export class SignupComponent {
   signupForm!: FormGroup;
 
   ngOnInit(): void {
-    this.signupForm = this.formBuilder.group({
-      firstName: ['aa', [Validators.required]],
-      lastName: ['aa', [Validators.required]],
-      phoneNumber: [
-        '1111111111',
-        [Validators.required, Validators.min(1000000000)],
-      ],
-      email: [
-        'krystinmukiri@gmail.com',
-        [Validators.required, Validators.email],
-      ],
-      password: ['123456', [Validators.required, Validators.minLength(6)]],
-    });
+    this.signupForm = this.formBuilder.group(
+      {
+        firstName: ['aa', [Validators.required]],
+        lastName: ['aa', [Validators.required]],
+        phoneNumber: [
+          '1111111111',
+          [Validators.required, Validators.min(1000000000)],
+        ],
+        email: [
+          'krystinmukiri@gmail.com',
+          [Validators.required, Validators.email],
+        ],
+        password: ['123456', [Validators.required, Validators.minLength(6)]],
+        confirm_password: ['123456', [Validators.required]],
+      },
+      {
+        validator: PasswordValidator.MatchValidator(
+          'password',
+          'confirm_password'
+        ),
+      }
+    );
   }
   onSubmit() {
     this.submittedForm = true;
