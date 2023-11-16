@@ -1,75 +1,3 @@
-<!-- <div class="displayTable">
-  <div class="displayTableCell">
-    <div class="authBlock">
-      <h3>Sign Up</h3>
-      <div class="formGroup">
-        <input
-          type="text"
-          class="formControl"
-          placeholder="First Name"
-          #firstName
-          required
-        />
-      </div>
-      <div class="formGroup">
-        <input
-          type="text"
-          class="formControl"
-          placeholder="Last Name"
-          #lastName
-          required
-        />
-      </div>
-      <div class="formGroup">
-        <input
-          type="email"
-          class="formControl"
-          placeholder="Email Address"
-          #userEmail
-          required
-        />
-      </div>
-      <div class="formGroup">
-        <input
-          type="password"
-          class="formControl"
-          placeholder="Password"
-          #userPwd
-          required
-        />
-      </div>
-      <div class="formGroup">
-        <input
-          type="phoneNumber"
-          class="formControl"
-          placeholder="Phone Number"
-          #phoneNumber
-          required
-        />
-      </div>
-      <div class="formGroup">
-        <input
-          type="button"
-          class="btn btnPrimary"
-          value="Sign Up"
-          (click)="
-            authService.signUp(
-              {
-                firstName: firstName.value,
-                lastName: lastName.value,
-                phoneNumber: phoneNumber.value,
-              },
-              userEmail.value,
-              userPwd.value
-            )
-          "
-        />
-      </div>
-      
-    </div>
-  </div>
-</div> -->
-
 <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
   <div class="sm:mx-auto sm:w-full sm:max-w-sm">
     <img class="mx-auto h-10 w-auto" src="assets/logo.png" alt="Your Company" />
@@ -191,6 +119,22 @@
           </p>
           } }
         </div>
+      </div>
+      <div class="mt-1">
+        <input
+          formControlName="confirm_password"
+          type="password"
+          class="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+        />
+        @if((f['confirm_password'].invalid || signupForm.errors?.['mismatch'])
+        && (f['confirm_password'].touched)){
+        @if(f['confirm_password'].errors?.['required']){
+        <p class="text-red-500 text-sm italic m-2">
+          Confirm Password is required
+        </p>
+        } @if(signupForm.errors?.['mismatch']){
+        <p class="text-red-500 text-sm italic m-2">Passwords do not match</p>
+        } }
       </div>
 
       <div>

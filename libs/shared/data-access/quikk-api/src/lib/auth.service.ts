@@ -56,7 +56,7 @@ export class AuthService implements OnDestroy {
     return this.afAuth
       .signInWithEmailAndPassword(email, password)
       .catch((error: { message: string }) => {
-        window.alert(error.message);
+        this.toastr.error(error.message, 'Error Signing In!');
       });
   }
 

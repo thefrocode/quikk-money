@@ -1,53 +1,76 @@
-<div class="displayTable">
-  <div class="displayTableCell">
-    <div class="authBlock">
-      <h3>Sign In</h3>
-      <div class="formGroup">
-        <input
-          type="text"
-          class="formControl"
-          placeholder="Username"
-          #userName
-          required
-        />
-      </div>
-      <div class="formGroup">
-        <input
-          type="password"
-          class="formControl"
-          placeholder="Password"
-          #userPassword
-          required
-        />
-      </div>
-      <!-- Calling SignIn Api from AuthService -->
-      <div class="formGroup">
-        <input
-          type="button"
-          class="btn btnPrimary"
-          value="Log in"
-          (click)="authService.signIn(userName.value, userPassword.value)"
-        />
-      </div>
-      <div class="formGroup">
-        <span class="or"><span class="orInner">Or</span></span>
-      </div>
-      <div class="forgotPassword">
-        <span routerLink="/forgot-password">Forgot Password?</span>
-      </div>
-    </div>
-    <div>
-      <a routerLink="/sign-up">Sign Up</a>
-    </div>
-    <div class="redirectToLogin">
-      <span
-        >Don't have an account?<a class="redirect" routerLink="/sign-up">
-          Sign Up</a
+<div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+  <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+    <img class="mx-auto h-10 w-auto" src="assets/logo.png" alt="Your Company" />
+    <h2
+      class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900"
+    >
+      Hello Again!!
+    </h2>
+    <h3 class="text-[#9095A0FF] text-center">Log into your account</h3>
+  </div>
+
+  <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+    <form [formGroup]="signinForm" (ngSubmit)="onSubmit()" class="space-y-2">
+      <div>
+        <label
+          for="email"
+          class="block text-sm font-medium leading-6 text-gray-900"
+          >Email address</label
         >
-      </span>
-    </div>
-    <div>
-      <button (click)="authService.signOut()">Sign Out</button>
-    </div>
+        <div class="mt-2">
+          <input
+            formControlName="email"
+            type="email"
+            autocomplete="email"
+            class="block w-full rounded-md border-0 py-1.5 px-2 stext-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          />
+          @if(f['email'].invalid && f['email'].touched){
+          @if(f['email'].errors?.['required']){
+          <p class="text-red-500 text-sm italic m-2">Email is required</p>
+          } }
+        </div>
+      </div>
+
+      <div>
+        <div class="flex items-center justify-between">
+          <label
+            for="password"
+            class="block text-sm font-medium leading-6 text-gray-900"
+            >Password</label
+          >
+        </div>
+        <div class="mt-1">
+          <input
+            formControlName="password"
+            type="password"
+            autocomplete="current-password"
+            class="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+          />
+          @if(f['password'].invalid && f['password'].touched){
+          @if(f['password'].errors?.['required']){
+          <p class="text-red-500 text-sm italic m-2">Password is required</p>
+          } }
+        </div>
+      </div>
+
+      <div>
+        <button
+          type="submit"
+          [disabled]="!signinForm.valid"
+          class="flex w-full justify-center rounded-md bg-primary px-3 py-1.5 text-sm disabled:opacity-50 font-semibold leading-6 text-white shadow-sm hover:bg-primary-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+        >
+          Sign In
+        </button>
+      </div>
+    </form>
+
+    <p class="mt-10 text-center text-sm text-gray-500">
+      Don't have an account?
+      <a
+        routerLink="/sign-up"
+        class="font-semibold leading-6 text-primary hover:text-primary-hover"
+        >Sign Up</a
+      >
+    </p>
   </div>
 </div>

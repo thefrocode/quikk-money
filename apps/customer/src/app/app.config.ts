@@ -15,7 +15,7 @@ export const appConfig: ApplicationConfig = {
       AngularFireAuthModule
     ),
     provideToastr({
-      timeOut: 10000000,
+      timeOut: 5000,
       positionClass: 'toast-top-center',
       preventDuplicates: true,
     }),
