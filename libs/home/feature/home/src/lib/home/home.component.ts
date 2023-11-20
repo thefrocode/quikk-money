@@ -6,11 +6,8 @@ import {
   WalletApiService,
   TransactionApiService,
 } from '@quikk-money/quikk-api';
-import {
-  CustomerStore,
-  TransactionsStore,
-  WalletStore,
-} from '@quikk-money/auth-store';
+import { TransactionsStore, WalletStore } from '@quikk-money/app-store';
+import { CustomerStore } from '@quikk-money/auth-store';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 import { provideIcons } from '@ng-icons/core';
@@ -102,10 +99,5 @@ export class HomeComponent {
         );
       }
     });
-  }
-  getTransactionsByCustomerId() {
-    this.transactionApiService.getAllTransactionsByCustomerId(
-      this.customer().id
-    );
   }
 }

@@ -34,7 +34,6 @@ export class AuthService {
     private toastr: ToastrService
   ) {
     this.afAuth.authState.pipe(takeUntilDestroyed()).subscribe((user: any) => {
-      console.log(user);
       if (user) {
         this.state.update((s) => {
           return {

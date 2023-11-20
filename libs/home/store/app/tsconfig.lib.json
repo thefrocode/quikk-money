@@ -13,5 +13,5 @@
     "jest.config.ts",
     "src/**/*.test.ts"
   ],
-  "include": ["src/**/*.ts", "../../../home/store/app/src/lib/transactions.store.ts"]
+  "include": ["src/**/*.ts"]
 }

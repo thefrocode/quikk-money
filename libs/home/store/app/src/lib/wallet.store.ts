@@ -1,7 +1,7 @@
 import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { WalletState } from '@quikk-money/models';
 import { WalletApiService } from '@quikk-money/quikk-api';
-import { CustomerStore } from './customer.store';
+import { CustomerStore } from '@quikk-money/auth-store';
 
 @Injectable({
   providedIn: 'root',

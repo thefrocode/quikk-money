@@ -1,7 +1,7 @@
 import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { Transaction, TransactionsState } from '@quikk-money/models';
 import { TransactionApiService } from '@quikk-money/quikk-api';
-import { CustomerStore } from './customer.store';
+import { CustomerStore } from '@quikk-money/auth-store';
 
 @Injectable({ providedIn: 'root' })
 export class TransactionsStore {
@@ -21,7 +21,7 @@ export class TransactionsStore {
   constructor() {
     effect(() => {
       if (this.customerStore.loaded()) {
-        this.getTransactions();
+        this.getTransactions(this.customerStore.customer().id);
       }
     });
   }
@@ -30,7 +30,6 @@ export class TransactionsStore {
       .getAllTransactionsByCustomerId(customerId)
       .subscribe((res: Transaction[]) => {
         this.state.update((s) => {
-          console.log(res);
           return {
             ...s,
             value: res,
