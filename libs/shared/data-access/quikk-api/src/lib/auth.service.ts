@@ -1,53 +1,70 @@
-import { effect, Injectable, NgZone, signal } from '@angular/core';
-import { Customer, CustomerState, User, UserState } from '@quikk-money/models';
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { Customer, User, UserState } from '@quikk-money/models';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
 import { CustomerApiService } from './customer-api.service';
-import { Subject, takeUntil } from 'rxjs';
-import { OnDestroy } from '@angular/core';
-import { AuthStore } from '@quikk-money/auth-store';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ToastrService } from 'ngx-toastr';
 @Injectable({
   providedIn: 'root',
 })
-export class AuthService implements OnDestroy {
-  private unsubscribe$ = new Subject<void>();
+export class AuthService {
+  private state = signal<UserState>({
+    value: {
+      email: null,
+      emailVerified: false,
+      uid: null,
+      displayName: null,
+    },
+    loaded: false,
+    isLogged: false,
+  });
+
+  user = computed(() => this.state().value);
+  loaded = computed(() => this.state().loaded);
+  error = computed(() => this.state().error);
+  isLogged = computed(() => this.state().isLogged);
+
   constructor(
     public afs: AngularFirestore,
     public afAuth: AngularFireAuth,
     public router: Router,
     public customerApi: CustomerApiService,
-    public authStore: AuthStore,
     private toastr: ToastrService
   ) {
-    this.afAuth.authState.pipe(takeUntil(this.unsubscribe$)).subscribe({
-      next: (value) => {
-        if (value && value.email) {
-          this.authStore.setUser({
+    this.afAuth.authState.pipe(takeUntilDestroyed()).subscribe((user: any) => {
+      console.log(user);
+      if (user) {
+        this.state.update((s) => {
+          return {
+            ...s,
             value: {
-              email: value?.email,
-              emailVerified: value?.emailVerified,
-              uid: value?.uid,
+              email: user?.email,
+              emailVerified: user?.emailVerified,
+              uid: user?.uid,
+              displayName: user?.displayName,
             },
-            status: 'success',
+            loaded: true,
             isLogged: true,
-          });
-          this.router.navigate(['home']);
-        } else {
-          this.authStore.setUser({
-            value: {},
-            status: 'success',
+          };
+        });
+        this.router.navigate(['home']);
+      } else {
+        this.state.update(() => {
+          return {
+            value: {
+              email: null,
+              emailVerified: false,
+              uid: null,
+              displayName: null,
+            },
+            loaded: true,
             isLogged: false,
-          });
-          this.authStore.setCustomer({
-            value: {},
-            status: 'success',
-          });
-          return;
-        }
-      },
-      error: (error) => this.authStore.updateUser(error, 'error'),
+          };
+        });
+        this.router.navigate(['sign-in']);
+      }
     });
   }
   // Sign in with email/password
@@ -89,9 +106,5 @@ export class AuthService implements OnDestroy {
     return this.afAuth.signOut().then(() => {
       this.router.navigate(['sign-in']);
     });
-  }
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
   }
 }

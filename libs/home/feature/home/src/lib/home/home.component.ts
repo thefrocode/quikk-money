@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   AuthService,
@@ -11,8 +6,11 @@ import {
   WalletApiService,
   TransactionApiService,
 } from '@quikk-money/quikk-api';
-import { AuthStore } from '@quikk-money/auth-store';
-import { Customer } from '@quikk-money/models';
+import {
+  CustomerStore,
+  TransactionsStore,
+  WalletStore,
+} from '@quikk-money/auth-store';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 import { provideIcons } from '@ng-icons/core';
@@ -49,8 +47,11 @@ import { ToastrService } from 'ngx-toastr';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {
-  public authService = inject(AuthService);
-  //public authStore = inject(AuthStore);
+  authService = inject(AuthService);
+
+  customerStore = inject(CustomerStore);
+  walletStore = inject(WalletStore);
+  transactionsStore = inject(TransactionsStore);
 
   public customerApiService = inject(CustomerApiService);
 
@@ -60,29 +61,27 @@ export class HomeComponent {
 
   private toastr: ToastrService = inject(ToastrService);
 
-  public user = this.authStore.user;
+  public user = this.authService.user;
 
-  public customer = this.authStore.customer;
+  public customer = this.customerStore.customer;
+  loadedCustomer = this.customerStore.loaded;
 
-  public wallet = this.authStore.wallet;
+  public wallet = this.walletStore.wallet;
+  loadedWallet = this.walletStore.loaded;
 
-  transactions = this.authStore.transactions;
+  transactions = this.transactionsStore.transactions;
 
-  // transactions$ = this.transactionApiService.getAllTransactionsByCustomerId(
-  //   this.customer().value.id
-  // );
-
-  constructor(public authStore: AuthStore, private dialog: MatDialog) {}
+  constructor(private dialog: MatDialog) {}
 
   openTopUpDialog() {
     const dialogRef = this.dialog.open(TopUpDialogComponent);
     dialogRef.afterClosed().subscribe((result: { amount: string }) => {
       if (!result) return;
 
-      this.walletApiService.update(this.customer().value.id, {
+      this.walletApiService.update(this.customer().id, {
         amount: result.amount,
       });
-      this.authStore.getWalletByCustomerId(this.customer().value.id);
+      this.walletStore.getWallet();
     });
   }
   openSendMoneyDialog() {
@@ -90,11 +89,11 @@ export class HomeComponent {
     dialogRef.afterClosed().subscribe((result: any) => {
       if (!result) return;
 
-      if (!this.user().value.emailVerified) {
+      if (!this.user().emailVerified) {
         this.toastr.error('Verify your account!', 'Error!');
         return;
       }
-      const sender = this.customer().value.id;
+      const sender = this.customer().id;
       if (sender && result.recipient && result.amount) {
         this.transactionApiService.sendMoney(
           sender,
@@ -106,7 +105,7 @@ export class HomeComponent {
   }
   getTransactionsByCustomerId() {
     this.transactionApiService.getAllTransactionsByCustomerId(
-      this.customer().value.id
+      this.customer().id
     );
   }
 }

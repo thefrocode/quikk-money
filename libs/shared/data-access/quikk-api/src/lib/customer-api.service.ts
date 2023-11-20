@@ -4,6 +4,7 @@ import {
   AngularFirestoreCollection,
 } from '@angular/fire/compat/firestore';
 import { Customer } from '@quikk-money/models';
+import { of } from 'rxjs';
 
 import { WalletApiService } from './wallet-api.service';
 
@@ -19,7 +20,9 @@ export class CustomerApiService {
   getAll(): AngularFirestoreCollection<Customer> {
     return this.customersRef;
   }
-  getOneByUid(uid?: string) {
+  getCustomerByUid(uid: string | null) {
+    // if null return empty observable
+    if (!uid) return of([]);
     return this.db
       .collection<Customer>('customers', (ref) =>
         ref.where('uid', '==', uid).limit(1)
