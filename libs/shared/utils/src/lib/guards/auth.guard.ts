@@ -5,13 +5,13 @@ import {
   Router,
   UrlTree,
 } from '@angular/router';
-import { AuthService } from '@quikk-money/quikk-api';
+import { AuthStore } from '@quikk-money/auth-store';
 import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
 export class AuthGuard {
-  public authStore: AuthService = inject(AuthService);
+  public authStore: AuthStore = inject(AuthStore);
   public router: Router = inject(Router);
 
   canActivate(

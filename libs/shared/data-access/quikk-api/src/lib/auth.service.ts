@@ -4,68 +4,18 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Router } from '@angular/router';
 import { CustomerApiService } from './customer-api.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
 import { ToastrService } from 'ngx-toastr';
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private state = signal<UserState>({
-    value: {
-      email: null,
-      emailVerified: false,
-      uid: null,
-      displayName: null,
-    },
-    loaded: false,
-    isLogged: false,
-  });
-
-  user = computed(() => this.state().value);
-  loaded = computed(() => this.state().loaded);
-  error = computed(() => this.state().error);
-  isLogged = computed(() => this.state().isLogged);
-
   constructor(
-    public afs: AngularFirestore,
     public afAuth: AngularFireAuth,
     public router: Router,
     public customerApi: CustomerApiService,
     private toastr: ToastrService
-  ) {
-    this.afAuth.authState.pipe(takeUntilDestroyed()).subscribe((user: any) => {
-      if (user) {
-        this.state.update((s) => {
-          return {
-            ...s,
-            value: {
-              email: user?.email,
-              emailVerified: user?.emailVerified,
-              uid: user?.uid,
-              displayName: user?.displayName,
-            },
-            loaded: true,
-            isLogged: true,
-          };
-        });
-        this.router.navigate(['home']);
-      } else {
-        this.state.update(() => {
-          return {
-            value: {
-              email: null,
-              emailVerified: false,
-              uid: null,
-              displayName: null,
-            },
-            loaded: true,
-            isLogged: false,
-          };
-        });
-        this.router.navigate(['sign-in']);
-      }
-    });
-  }
+  ) {}
   // Sign in with email/password
   signIn(email: string, password: string) {
     return this.afAuth

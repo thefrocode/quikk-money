@@ -7,7 +7,7 @@ import {
   TransactionApiService,
 } from '@quikk-money/quikk-api';
 import { TransactionsStore, WalletStore } from '@quikk-money/app-store';
-import { CustomerStore } from '@quikk-money/auth-store';
+import { AuthStore, CustomerStore } from '@quikk-money/auth-store';
 import { HlmButtonDirective } from '@spartan-ng/ui-button-helm';
 import { HlmIconComponent } from '@spartan-ng/ui-icon-helm';
 import { provideIcons } from '@ng-icons/core';
@@ -45,20 +45,17 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class HomeComponent {
   authService = inject(AuthService);
+  customerApiService = inject(CustomerApiService);
+  walletApiService = inject(WalletApiService);
+  transactionApiService = inject(TransactionApiService);
+  private toastr: ToastrService = inject(ToastrService);
 
+  authStore = inject(AuthStore);
   customerStore = inject(CustomerStore);
   walletStore = inject(WalletStore);
   transactionsStore = inject(TransactionsStore);
 
-  public customerApiService = inject(CustomerApiService);
-
-  public walletApiService = inject(WalletApiService);
-
-  public transactionApiService = inject(TransactionApiService);
-
-  private toastr: ToastrService = inject(ToastrService);
-
-  public user = this.authService.user;
+  public user = this.authStore.user;
 
   public customer = this.customerStore.customer;
   loadedCustomer = this.customerStore.loaded;

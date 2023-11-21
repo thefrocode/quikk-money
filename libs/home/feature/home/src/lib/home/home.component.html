@@ -3,7 +3,7 @@
     <p class="mr-auto"></p>
     <button
       (click)="authService.signOut()"
-      class="w-8 h-8 border-2 rounded-full flex justify-center items-center"
+      class="sign-out-button w-8 h-8 border-2 rounded-full flex justify-center items-center"
     >
       <hlm-icon size="18px" name="radixPerson" color="white" />
     </button>
@@ -14,7 +14,7 @@
     <div class="mt-4 sm:mx-auto sm:w-full sm:max-w-sm">
       @if (loadedCustomer()) {
       <p class="text-primary-text text-sm">Welcome Back</p>
-      <p class="text-primary-text text-lg font-bold">
+      <p class="customer-name text-primary-text text-lg font-bold">
         {{ customer().firstName }} {{ customer().lastName }}
       </p>
       }
@@ -24,7 +24,7 @@
         <div class="p-4">
           <p class="text-primary-text text-sm">Balance</p>
           @if (loadedWallet()) {
-          <p class="text-primary-text text-lg font-bold">
+          <p class="wallet-balance text-primary-text text-lg font-bold">
             Ksh: {{ wallet().balance }}
           </p>
           }
@@ -56,7 +56,7 @@
   </div>
   @if(!user().emailVerified){
   <div
-    class="sm:mx-auto sm:w-full sm:max-w-sm mt-5 flex gap-12 justify-center mx-6"
+    class="unverified sm:mx-auto sm:w-full sm:max-w-sm mt-5 flex gap-12 justify-center mx-6"
   >
     <div class="bg-accent rounded-md p-4">
       <hlm-icon size="30px" name="radixInfoCircled" color="white" />
@@ -66,13 +66,14 @@
     </div>
   </div>
   }
+
   <div
     class="sm:mx-auto sm:w-full sm:max-w-sm mt-5 flex flex-col gap-4 mx-6 mb-5"
   >
     <p class="text-primary-text font-bold text-lg">Transactions</p>
     @for(transaction of transactions(); track transaction.id){
     <div
-      class="border rounded-md flex flex-row justify-between px-2 py-4 items-center"
+      class="transactions-list border rounded-md flex flex-row justify-between px-2 py-4 items-center"
     >
       <div class="flex flex-col">
         <p>
@@ -80,6 +81,10 @@
         </p>
       </div>
       <p class="text-sm font-bold">Ksh {{ transaction.amount }}</p>
+    </div>
+    }@empty {
+    <div class="empty-transactions flex flex-col items-center">
+      <p class="text-primary-text">No transactions yet</p>
     </div>
     }
   </div>

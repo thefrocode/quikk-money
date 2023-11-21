@@ -47,7 +47,6 @@ export class TransactionApiService {
           balance: recipientBalance + amount,
         });
 
-        //Add transaction record
         const transactionData = {
           sender_id: senderId,
           recipient_id: recipientId,

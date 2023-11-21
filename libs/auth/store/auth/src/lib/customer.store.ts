@@ -1,6 +1,7 @@
 import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { CustomerState } from '@quikk-money/models';
-import { AuthService, CustomerApiService } from '@quikk-money/quikk-api';
+import { CustomerApiService } from '@quikk-money/quikk-api';
+import { AuthStore } from './auth.store';
 
 @Injectable({
   providedIn: 'root',
@@ -8,7 +9,7 @@ import { AuthService, CustomerApiService } from '@quikk-money/quikk-api';
 export class CustomerStore {
   customerApi = inject(CustomerApiService);
 
-  authStore = inject(AuthService);
+  authStore = inject(AuthStore);
 
   private state = signal<CustomerState>({
     value: {},

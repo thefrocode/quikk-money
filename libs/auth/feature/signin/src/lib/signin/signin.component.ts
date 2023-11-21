@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '@quikk-money/quikk-api';
+import { AuthStore } from '@quikk-money/auth-store';
 import { RouterModule } from '@angular/router';
 import {
   FormGroup,
@@ -17,9 +18,9 @@ import {
   styleUrls: ['./signin.component.css'],
 })
 export class SigninComponent {
-  public authService = inject(AuthService);
+  authService = inject(AuthService);
 
-  //public authStore = inject(AuthStore);
+  authStore = inject(AuthStore);
 
   //public user = this.authStore.user;
   signinForm!: FormGroup;
